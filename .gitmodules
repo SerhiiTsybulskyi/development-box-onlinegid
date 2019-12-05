@@ -1,0 +1,6 @@
+[submodule "onlinegid-api"]
+	path = onlinegid-api
+	url = git@github.com:SerhiiTsybulskyi/onlinegid-api.git
+[submodule "onlinegid-ui"]
+	path = onlinegid-ui
+	url = git@github.com:SerhiiTsybulskyi/onlinegid-ui.git
