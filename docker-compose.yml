@@ -1,0 +1,310 @@
+version: '3'
+
+services:
+  api:
+    image: og-api
+    build: ./onlinegid-api
+    ports:
+     - 8081:8080
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'onlinegid'
+      MYSQL_USER: 'ongid'
+      MYSQL_PASSWORD: 'ongidP@ssw0rd'
+      MYSQL_ROOT_PASSWORD: 'ongidP@ssw0rd'
+    ports:
+      - 3306:3306
+    volumes:
+      - ./.data/db:/var/lib/mysql
+
+#  registry:
+##    build: ./registry
+#    image: registry:1.0.0-SNAPSHOT
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8761:8761
+#    environment:
+#      - SERVER_PORT=8761
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - ACTIVE_PROFILE=dev
+#
+#  gateway:
+##    build: ./gateway
+#    image: gateway:1.0.0-SNAPSHOT
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8081:8081
+#    environment:
+#      - SERVER_PORT=8081
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - EUREKA_SERVICE_URL=http://registry:8761
+#      - RIBBON_EUREKA_ENABLED=true
+#      - ACTIVE_PROFILE=dev
+#    depends_on:
+#      - registry
+#
+#  administration:
+##    build: ./administration
+#    image: administration:1.0.0-SNAPSHOT
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8080:8080
+#      - 1099:1099
+#      - 5006:5006
+#    environment:
+#      - SERVER_PORT=8080
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - EUREKA_SERVICE_URL=http://registry:8761
+#      - RIBBON_EUREKA_ENABLED=true
+#      - ACTIVE_PROFILE=dev
+#      - POSTGRES_USER_NAME=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_HOST=pph-administration-db
+#      - POSTGRES_PORT=5432
+#      - POSTGRES_DB=pph_administration
+#      - JAVA_OPTS=-Dcom.sun.management.jmxremote
+#          -Djava.rmi.server.hostname=localhost
+#          -Dcom.sun.management.jmxremote.port=1099
+#          -Dcom.sun.management.jmxremote.rmi.port=1099
+#          -Dcom.sun.management.jmxremote.local.only=false
+#          -Dcom.sun.management.jmxremote.authenticate=false
+#          -Dcom.sun.management.jmxremote.ssl=false
+#        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
+#    depends_on:
+#      - registry
+#      - pph-administration-db
+#
+#  data-manager:
+##    build: ./data-manager
+#    image: data-manager:1.0.0-SNAPSHOT
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8888:8888
+#      - 1088:1088
+#      - 5007:5007
+#    environment:
+#      - SERVER_PORT=8888
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - EUREKA_SERVICE_URL=http://registry:8761
+#      - RIBBON_EUREKA_ENABLED=true
+#      - ACTIVE_PROFILE=dev
+#      - POSTGRES_USER_NAME=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_HOST=pph-report-db-slave
+#      - POSTGRES_PORT=5432
+#      - POSTGRES_DB=pph_data_warehouse
+#      - JAVA_OPTS=-Dcom.sun.management.jmxremote
+#        -Djava.rmi.server.hostname=localhost
+#        -Dcom.sun.management.jmxremote.port=1088
+#        -Dcom.sun.management.jmxremote.rmi.port=1088
+#        -Dcom.sun.management.jmxremote.local.only=false
+#        -Dcom.sun.management.jmxremote.authenticate=false
+#        -Dcom.sun.management.jmxremote.ssl=false
+#        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007
+#    depends_on:
+#      - registry
+#      - pph-report-db-slave
+#
+#  data-loader:
+##    build: ./data-loader
+#    image: data-loader:1.0.0-SNAPSHOT
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8000:8000
+#      - 1077:1077
+#      - 5008:5008
+#    environment:
+#      - SERVER_PORT=8000
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - EUREKA_SERVICE_URL=http://registry:8761
+#      - RIBBON_EUREKA_ENABLED=true
+#      - ACTIVE_PROFILE=dev
+#      - POSTGRES_USER_NAME=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_HOST=pph-report-db-master
+#      - POSTGRES_PORT=5432
+#      - POSTGRES_DB=pph_data_warehouse
+#      - JAVA_OPTS=-Dcom.sun.management.jmxremote
+#        -Djava.rmi.server.hostname=localhost
+#        -Dcom.sun.management.jmxremote.port=1077
+#        -Dcom.sun.management.jmxremote.rmi.port=1077
+#        -Dcom.sun.management.jmxremote.local.only=false
+#        -Dcom.sun.management.jmxremote.authenticate=false
+#        -Dcom.sun.management.jmxremote.ssl=false
+#        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5008
+#    depends_on:
+#      - registry
+#      - pph-report-db-master
+#
+#  export-service:
+##    build: ./export-service
+#    image: export-service:1.0.0-SNAPSHOT
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8002:8002
+#      - 1066:1066
+#      - 5009:5009
+#    environment:
+#      - SERVER_PORT=8000
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - EUREKA_SERVICE_URL=http://registry:8761
+#      - RIBBON_EUREKA_ENABLED=true
+#      - ACTIVE_PROFILE=dev
+#      - JAVA_OPTS=-Dcom.sun.management.jmxremote
+#        -Djava.rmi.server.hostname=localhost
+#        -Dcom.sun.management.jmxremote.port=1066
+#        -Dcom.sun.management.jmxremote.rmi.port=1066
+#        -Dcom.sun.management.jmxremote.local.only=false
+#        -Dcom.sun.management.jmxremote.authenticate=false
+#        -Dcom.sun.management.jmxremote.ssl=false
+#        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5009
+#    depends_on:
+#      - registry
+#
+#  medispan-service:
+##    build: ./medispan-service
+#    image: medispan-service:1.0.0-SNAPSHOT
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8001:8001
+#      - 1055:1055
+#      - 5010:5010
+#    environment:
+#      - SERVER_PORT=8000
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - EUREKA_SERVICE_URL=http://registry:8761
+#      - RIBBON_EUREKA_ENABLED=true
+#      - ACTIVE_PROFILE=dev
+#      - POSTGRES_USER_NAME=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_HOST=pph-report-db-master
+#      - POSTGRES_PORT=5432
+#      - POSTGRES_DB=pph_data_warehouse
+#      - JAVA_OPTS=-Dcom.sun.management.jmxremote
+#        -Djava.rmi.server.hostname=localhost
+#        -Dcom.sun.management.jmxremote.port=1055
+#        -Dcom.sun.management.jmxremote.rmi.port=1055
+#        -Dcom.sun.management.jmxremote.local.only=false
+#        -Dcom.sun.management.jmxremote.authenticate=false
+#        -Dcom.sun.management.jmxremote.ssl=false
+#        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5010
+#    depends_on:
+#      - registry
+#      - pph-report-db-master
+#
+#  scheduler-service:
+#    build: ./scheduler-service
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8003:8003
+#      - 1045:1045
+#      - 5011:5011
+#    environment:
+#      - SERVER_PORT=8003
+#      - EUREKA_SERVICE_REGISTER_BY_IP=false
+#      - EUREKA_SERVICE_URL=http://registry:8761
+#      - RIBBON_EUREKA_ENABLED=true
+#      - ACTIVE_PROFILE=dev
+#      - POSTGRES_USER_NAME=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_HOST=pph-scheduler-db
+#      - POSTGRES_PORT=5432
+#      - POSTGRES_DB=pph_scheduler
+#      - CRON_CLAIM_DATA_LOAD_JOB=0 0/1 * 1/1 * ? *
+#      - JAVA_OPTS=-Dcom.sun.management.jmxremote
+#        -Djava.rmi.server.hostname=localhost
+#        -Dcom.sun.management.jmxremote.port=1045
+#        -Dcom.sun.management.jmxremote.rmi.port=1045
+#        -Dcom.sun.management.jmxremote.local.only=false
+#        -Dcom.sun.management.jmxremote.authenticate=false
+#        -Dcom.sun.management.jmxremote.ssl=false
+#        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5011
+#    depends_on:
+#      - registry
+#      - pph-scheduler-db
+#
+#  pph-administration-db:
+#    image: postgres:11.5-alpine
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 6432:5432
+#    volumes:
+#      - pph-administration-db-data:/var/lib/postgresql/data
+#    environment:
+#      - LANG=en_US.utf8
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_DB=pph_administration
+#
+#  pph-report-db-master:
+#    build: ./development-process/database/pph-report-db/master
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 5432:5432
+#    volumes:
+#      - pph-report-db-master-data:/var/lib/postgresql/data
+#    environment:
+#      - LANG=en_US.utf8
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_DB=pph_data_warehouse
+#
+#  pph-report-db-slave:
+#    build: ./development-process/database/pph-report-db/slave
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 7432:5432
+#    environment:
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_DB=pph_data_warehouse
+#      - PG_MASTER_HOST=pph-report-db-master
+#    depends_on:
+#      - pph-report-db-master
+#
+#  pph-scheduler-db:
+#    image: postgres:11.5-alpine
+#    restart: always
+#    networks:
+#      - pillowph-report
+#    ports:
+#      - 8432:5432
+#    volumes:
+#      - pph-scheduler-db-data:/var/lib/postgresql/data
+#    environment:
+#      - LANG=en_US.utf8
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_DB=pph_scheduler
+#

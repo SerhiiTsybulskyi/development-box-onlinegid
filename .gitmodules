@@ -4,3 +4,6 @@
 [submodule "onlinegid-ui"]
 	path = onlinegid-ui
 	url = git@github.com:SerhiiTsybulskyi/onlinegid-ui.git
+[submodule "video-parser"]
+	path = video-parser
+	url = git@bitbucket.org:ZhezherP/video-parser.git
